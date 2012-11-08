@@ -50,3 +50,5 @@ gem "bootstrap-sass", ">= 2.1.0.1"
 gem "sendgrid", ">= 1.0.1"
 gem "devise", ">= 2.1.2"
 gem "simple_form", ">= 2.0.4"
+gem "therubyracer", ">= 0.10.2", :group => :assets, :platform => :ruby
+gem "hub", ">= 1.10.2", :require => nil, :group => [:development]
