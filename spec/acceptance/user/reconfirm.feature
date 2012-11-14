@@ -6,7 +6,7 @@ Feature: Reconfirmation
   Scenario: Request new confirmation
     Given I am not logged in
     And I have an account but have not chosen a password
-    And I am on the login path
+    And I am on the sign_in path
     And I follow the "Didn't receive confirmation instructions?" link
     And I fill in my email address
     And I press "Resend confirmation instructions"

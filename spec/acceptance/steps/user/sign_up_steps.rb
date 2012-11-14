@@ -13,16 +13,6 @@ module SignUpSteps
     send ":email_addressee should have :count email with subject :email_subject", email_addressee, 1, "Welcome" 
   end
 
-  step 'no user exists with an email :unregistered_email' do |unregistered_email|
-    User.find_by_email(unregistered_email).should be nil
-  end
-  
-  step 'that a user does exist with an email :registered_email' do |registered_email|
-    User.create(email: registered_email)
-    User.find_by_email(registered_email).should_not be nil
-    reset_mailer
-  end
-
   step 'a Merciboq from :sender to :recipient1' do |sender, recipient|
     thankyou_note
     @message.from = [sender]
