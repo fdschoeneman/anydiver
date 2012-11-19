@@ -54,6 +54,7 @@ end
 
 group :test, :development do 
   gem 'rspec-rails', '2.11.4'
+  gem 'rspec-given', '2.2.0'
   gem 'factory_girl_rails', '4.1.0' 
   gem 'rb-inotify', '~> 0.8.8'
 end

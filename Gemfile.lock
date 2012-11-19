@@ -180,6 +180,8 @@ GEM
     rspec-core (2.11.1)
     rspec-expectations (2.11.3)
       diff-lcs (~> 1.1.3)
+    rspec-given (2.2.0)
+      rspec (> 1.2.8)
     rspec-mocks (2.11.3)
     rspec-rails (2.11.4)
       actionpack (>= 3.0)
@@ -270,6 +272,7 @@ DEPENDENCIES
   pg
   rails (= 3.2.8)
   rb-inotify (~> 0.8.8)
+  rspec-given (= 2.2.0)
   rspec-rails (= 2.11.4)
   ruby_parser (= 2.3.1)
   sass-rails (= 3.2.3)
