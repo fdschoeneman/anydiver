@@ -6,7 +6,7 @@ Feature: Request password reset
     Background:
       And I am not logged in
       And I am on the home page
-      And I follow the "Login" link
+      And I follow the "Sign in" link
       And I follow the "Forgot your password?" link
 
     Scenario: User attempts to reset password with the wrong email

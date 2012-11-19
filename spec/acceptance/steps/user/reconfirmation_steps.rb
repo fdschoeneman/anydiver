@@ -5,6 +5,12 @@ module ReconfirmationSteps
     reset_mailer
   end
 
+  step 'I have an account but have not confirmed it' do 
+    @actor = FactoryGirl.build(:unconfirmed_user)
+    @actor.save
+    reset_mailer
+  end
+
   step 'I fill in my email address' do 
     send "I fill in :value for :key", @actor.email, :user_email
   end

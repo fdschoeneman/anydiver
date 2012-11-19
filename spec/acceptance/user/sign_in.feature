@@ -27,5 +27,4 @@ Feature: Sign in
       And I fill in "Email" with "registered@signuptester.com"
       And I fill in "Password" with "password"
       And I press "Sign in"
-      Then show me the page
-      Then I should see a notice with "Signed in"
+      Then I should see a notice with "Signed in" 
