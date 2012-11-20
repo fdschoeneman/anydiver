@@ -1,5 +1,3 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
   factory :user, aliases: [] do
     sequence(:email)      { |n| "user#{Time.now.to_i + n}@gtest.com" }

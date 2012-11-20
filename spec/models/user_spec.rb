@@ -2,114 +2,97 @@ require 'spec_helper'
 
 describe User do
   
-  Given(:user) { build(:user)}
-  
-  it "should create a new instance given a valid attribute" do
-    user.should be_valid
+  it "should be a type of class" do
+    User.should be_kind_of(Class) 
+  end
+
+  describe 'database' do
+
+    describe 'columns' do 
+
+      %w[reset_password_sent_at remember_created_at current_sign_in_at 
+        last_sign_in_at confirmed_at confirmation_sent_at 
+        created_at updated_at
+        ].each do |column|
+        it { should have_db_column(column.to_sym).of_type(:datetime) }
+      end
+
+      %w[name email encrypted_password reset_password_token current_sign_in_ip 
+        last_sign_in_ip confirmation_token unconfirmed_email
+        ].each do |column|
+        it { should have_db_column(column.to_sym).of_type(:string) }
+      end
+
+      it { should have_db_column(:sign_in_count).of_type(:integer) }
+    end
+
+    describe 'indexes' do 
+
+      %w[email reset_password_token
+      ].each do |index|
+        it { should have_db_index(index.to_sym).unique(true)}
+      end
+    end
+  end
+
+  describe "security" do
+
+    describe "mass assignable" do 
+
+      %w[name email password password_confirmation
+        remember_me
+      ].each do |attribute|
+        it {should allow_mass_assignment_of(attribute.to_sym) }
+      end
+    end
+
+    describe "protected" do 
+
+      %w[user_id encrypted_password reset_password_token 
+        reset_password_sent_at remember_created_at unconfirmed_email 
+        sign_in_count current_sign_in_at last_sign_in_at
+        confirmation_token confirmed_at confirmation_sent_at 
+        unconfirmed_email
+      ].each do |attribute|
+        it {should_not allow_mass_assignment_of(attribute.to_sym) }
+      end
+    end
   end
 
   describe "validations" do 
 
-    it { should validate_presence_of(:email)
-      .with_message(/can't be blank/) }
-    it { should validate_uniqueness_of(:email) }
-      # .with_message(/already been registered/) }
+    describe "email addresses" do 
 
-    it "should allow properly formed emails" do 
-    end  
+      it { should validate_presence_of(:email)
+        .with_message(/can't be blank/) }
+      it { should validate_uniqueness_of(:email) 
+        .with_message(/already been taken/) }
 
+      it "should allow properly formed emails" do 
+        ["anydiver@test.com", "pat@gmail.com", "user.period@yahoo.com", 
+          "user_underscore@msn.hotmail.com"
+        ].each do |good_email|
+          should allow_value(good_email).for(:email) 
+        end
+      end 
 
+      it "should disallow spammy or bad looking emails" do 
+        ["fre_d@.com", "@gmail.com", "hotmail.com", "gmail", 
+          "_net&gmail."
+        ].each do |bad_email|
+          should_not allow_value(bad_email).for(:email) 
+        end
+      end
+    end
   end
 
-  context "when valid" do 
-    When { user.email = "" }
-    Then { user.should_not be_valid } 
+  describe "passwords" do 
+
+    it "should be more than 5 and less than 41 characters long" do 
+      should_not allow_value("a" * 129).for(:password) 
+      should_not allow_value("a" * 5).for(:password) 
+      should allow_value("a" * 128).for(:password) 
+      should allow_value("a" * 6).for(:password) 
+    end
   end
 end
-  
-  # it "should require an email address" do
-  #   no_email_user = User.new(@attr.merge(:email => ""))
-  #   no_email_user.should_not be_valid
-  # end
-  
-  # it "should accept valid email addresses" do
-  #   addresses = %w[user@foo.com THE_USER@foo.bar.org first.last@foo.jp]
-  #   addresses.each do |address|
-  #     valid_email_user = User.new(@attr.merge(:email => address))
-  #     valid_email_user.should be_valid
-  #   end
-  # end
-  
-  # it "should reject invalid email addresses" do
-  #   addresses = %w[user@foo,com user_at_foo.org example.user@foo.]
-  #   addresses.each do |address|
-  #     invalid_email_user = User.new(@attr.merge(:email => address))
-  #     invalid_email_user.should_not be_valid
-  #   end
-  # end
-  
-  # it "should reject duplicate email addresses" do
-  #   User.create!(@attr)
-  #   user_with_duplicate_email = User.new(@attr)
-  #   user_with_duplicate_email.should_not be_valid
-  # end
-  
-  # it "should reject email addresses identical up to case" do
-  #   upcased_email = @attr[:email].upcase
-  #   User.create!(@attr.merge(:email => upcased_email))
-  #   user_with_duplicate_email = User.new(@attr)
-  #   user_with_duplicate_email.should_not be_valid
-  # end
-  
-  # describe "passwords" do
-
-  #   before(:each) do
-  #     @user = User.new(@attr)
-  #   end
-
-  #   it "should have a password attribute" do
-  #     @user.should respond_to(:password)
-  #   end
-
-  #   it "should have a password confirmation attribute" do
-  #     @user.should respond_to(:password_confirmation)
-  #   end
-  # end
-  
-  # describe "password validations" do
-
-  #   it "should require a password" do
-  #     User.new(@attr.merge(:password => "", :password_confirmation => "")).
-  #       should_not be_valid
-  #   end
-
-  #   it "should require a matching password confirmation" do
-  #     User.new(@attr.merge(:password_confirmation => "invalid")).
-  #       should_not be_valid
-  #   end
-    
-  #   it "should reject short passwords" do
-  #     short = "a" * 5
-  #     hash = @attr.merge(:password => short, :password_confirmation => short)
-  #     User.new(hash).should_not be_valid
-  #   end
-    
-  # end
-  
-  # describe "password encryption" do
-    
-  #   before(:each) do
-  #     @user = User.create!(@attr)
-  #   end
-    
-  #   it "should have an encrypted password attribute" do
-  #     @user.should respond_to(:encrypted_password)
-  #   end
-
-  #   it "should set the encrypted password attribute" do
-  #     @user.encrypted_password.should_not be_blank
-  #   end
-
-  # end
-
-# end
